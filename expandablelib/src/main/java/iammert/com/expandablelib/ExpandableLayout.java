@@ -57,6 +57,8 @@ public class ExpandableLayout extends LinearLayout {
 
     private Operation currentFilter = DEFAULT_FILTER;
 
+    private boolean onlyOneSectionExpanded = false;
+
     public ExpandableLayout(Context context) {
         super(context);
         init(context, null);
@@ -201,7 +203,8 @@ public class ExpandableLayout extends LinearLayout {
         }
     }
 
-    private void notifySectionAdded(final Section section) {
+    private void notifySectionAdded(final Section section)
+    {
         if (renderer == null)
             return;
 
@@ -210,12 +213,27 @@ public class ExpandableLayout extends LinearLayout {
         sectionLayout.setOrientation(LinearLayout.VERTICAL);
 
         View parentView = layoutInflater.inflate(parentLayout, null);
-        parentView.setOnClickListener(new OnClickListener() {
+        parentView.setOnClickListener(new OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                if (section.expanded) {
+            public void onClick(View view)
+            {
+                if (section.expanded)
+                {
                     collapse(section.parent);
-                } else {
+                }
+                else
+                {
+                    if (onlyOneSectionExpanded)
+                    {
+                        for (Section sec : sections)
+                        {
+                            if (!sec.equals(section))
+                            {
+                                collapse(sec.parent);
+                            }
+                        }
+                    }
                     expand(section.parent);
                 }
             }
@@ -245,11 +263,15 @@ public class ExpandableLayout extends LinearLayout {
         }
     }
 
-    private <P> void expand(@NonNull P parent) {
-        for (int i = 0; i < sections.size(); i++) {
-            if (parent.equals(sections.get(i).parent)) {
+    private <P> void expand(@NonNull P parent)
+    {
+        for (int i = 0; i < sections.size(); i++)
+        {
+            if (parent.equals(sections.get(i).parent))
+            {
                 ViewGroup sectionView = ((ViewGroup) getChildAt(i));
-                for (int j = 1; j < sectionView.getChildCount(); j++) {
+                for (int j = 1; j < sectionView.getChildCount(); j++)
+                {
                     final View childView = sectionView.getChildAt(j);
                     final Object childType = sections.get(i).children.get(j - 1);
                     childView.setVisibility(currentFilter.apply(childType) ? View.VISIBLE : View.GONE);
@@ -277,5 +299,41 @@ public class ExpandableLayout extends LinearLayout {
                 break;
             }
         }
+    }
+
+    public void collapseSection(Section section)
+    {
+        collapse(section.parent);
+    }
+
+    public void collapseAllSection()
+    {
+        for (Section section : sections)
+        {
+            collapseSection(section);
+        }
+    }
+
+    public void expandSection(Section section)
+    {
+        expand(section.parent);
+    }
+
+    public void expandAllSection()
+    {
+        for (Section section : sections)
+        {
+            expandSection(section);
+        }
+    }
+
+    public void setOnlyOneSectionExpanded(boolean onlyOneSectionExpanded)
+    {
+        this.onlyOneSectionExpanded = onlyOneSectionExpanded;
+    }
+
+    public boolean isOnlyOneSectionExpanded()
+    {
+        return onlyOneSectionExpanded;
     }
 }

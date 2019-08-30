@@ -11,10 +11,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/edittext"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonExpandAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expand all sections"
+            android:layout_margin="5sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonCollapseAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Collapse all sections"
+            android:layout_below="@id/edittext"
+            android:layout_margin="5sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/edittext">
+        android:layout_below="@+id/linearLayout">
 
         <iammert.com.expandablelib.ExpandableLayout
             android:id="@+id/el"

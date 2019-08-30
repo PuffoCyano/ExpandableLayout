@@ -2,6 +2,8 @@ package iammert.com.expandablelayout;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -24,9 +26,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         EditText editText = (EditText) findViewById(R.id.edittext);
+        AppCompatButton buttonExpandAll = findViewById(R.id.buttonExpandAll);
+        AppCompatButton buttonCollapseAll = findViewById(R.id.buttonCollapseAll);
         ExpandableLayout sectionLinearLayout = (ExpandableLayout) findViewById(R.id.el);
+
+        // I want only one section expanded
+        sectionLinearLayout.setOnlyOneSectionExpanded(true);
+
+        buttonExpandAll.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                sectionLinearLayout.expandAllSection();
+            }
+        });
+
+        buttonCollapseAll.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                sectionLinearLayout.collapseAllSection();
+            }
+        });
 
         sectionLinearLayout.setRenderer(new ExpandableLayout.Renderer<FruitCategory, Fruit>() {
             @Override

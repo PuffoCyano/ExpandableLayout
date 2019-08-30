@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/PuffoCyano/ExpandableLayout.svg)](https://jitpack.io/#PuffoCyano/ExpandableLayout)
 # ExpandableLayout
 Expandable LinearLayout
 <img src="https://raw.githubusercontent.com/iammert/ExpandableLayout/master/art/ell.png"/>
@@ -13,7 +14,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.iammert:ExpandableLayout:1.4.1'
+    implementation 'com.github.PuffoCyano:ExpandableLayout:v2.0'
 }
 ```
 ## Layout

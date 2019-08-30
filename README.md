@@ -13,7 +13,7 @@ allprojects {
 }
 
 dependencies {
-    compile 'com.github.iammert:ExpandableLayout:1.4.1'
+    implementation 'com.github.iammert:ExpandableLayout:1.4.1'
 }
 ```
 ## Layout
@@ -83,18 +83,29 @@ class FruitCatefory implements Filterable{}
 //make your child class filterable
 class FruitCatefory implements Filterable{}
 ```
+## Methods
 Now, you can search in parents or children. Layout will be updated automatically. 
 ```java
 expendableLayout.filterParent("SEARCH PARAM")
 //or
 expendableLayout.filterChildren("SEARCH PARAM")
 ```
+With the new version 2.0 you can allow expanding only one section at a time:
+```java
+// I want only one section expanded
+sectionLinearLayout.setOnlyOneSectionExpanded(true);
+```
+Added other methods:
+- `public void collapseSection(Section section)` to collapse only one section;
+- `public void collapseAllSection()` to collapse all sections;
+- `public void expandSection(Section section)` to expand only one section;
+- `public void expandAllSection()` to expand all sections.
 
 License
 --------
 
 
-    Copyright 2017 Mert Şimşek.
+    Copyright 2019 PuffoCyano.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

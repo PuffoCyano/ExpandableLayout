@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/PuffoCyano/ExpandableLayout.svg)](https://jitpack.io/#PuffoCyano/ExpandableLayout)
 # ExpandableLayout
 Expandable LinearLayout
 <img src="https://raw.githubusercontent.com/iammert/ExpandableLayout/master/art/ell.png"/>

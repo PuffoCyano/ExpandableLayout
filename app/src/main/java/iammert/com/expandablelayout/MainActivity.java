@@ -84,24 +84,6 @@ public class MainActivity extends AppCompatActivity {
         sectionLinearLayout.setCollapseListener((ExpandCollapseListener.CollapseListener<FruitCategory>) (parentIndex, parent, view) -> {
 
         });
-
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                sectionLinearLayout.filterChildren(obj -> ((Fruit) obj).name.toLowerCase().contains(s.toString().toLowerCase()));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     public Section<FruitCategory, Fruit> getSection() {

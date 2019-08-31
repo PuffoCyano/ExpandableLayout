@@ -4,14 +4,15 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +33,6 @@ public class ExpandableLayout extends LinearLayout {
 
     private static final int NO_INDEX = -1;
 
-    private static final Operation DEFAULT_FILTER = new Operation() {
-        @Override
-        public boolean apply(Object obj) {
-            return true;
-        }
-    };
-
     private LayoutInflater layoutInflater;
 
     @LayoutRes
@@ -54,8 +48,6 @@ public class ExpandableLayout extends LinearLayout {
     private ExpandCollapseListener.ExpandListener expandListener;
 
     private ExpandCollapseListener.CollapseListener collapseListener;
-
-    private Operation currentFilter = DEFAULT_FILTER;
 
     private boolean onlyOneSectionExpanded = false;
 
@@ -83,17 +75,13 @@ public class ExpandableLayout extends LinearLayout {
     private void init(Context context, AttributeSet attributeSet) {
         setOrientation(VERTICAL);
         sections = new ArrayList<>();
-        TypedArray typedArray = null;
-        try {
-            typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.ExpandableLayout);
-            parentLayout = typedArray.getResourceId(R.styleable.ExpandableLayout_parentLayout, NO_RES);
-            childLayout = typedArray.getResourceId(R.styleable.ExpandableLayout_childLayout, NO_RES);
-            layoutInflater = LayoutInflater.from(context);
-        } finally {
-            if (typedArray != null) {
-                typedArray.recycle();
-            }
-        }
+        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.ExpandableLayout);
+
+        parentLayout = typedArray.getResourceId(R.styleable.ExpandableLayout_parentLayout, NO_RES);
+        childLayout = typedArray.getResourceId(R.styleable.ExpandableLayout_childLayout, NO_RES);
+        layoutInflater = LayoutInflater.from(context);
+
+        typedArray.recycle();
     }
 
     public <P> void setExpandListener(ExpandCollapseListener.ExpandListener<P> expandListener) {
@@ -153,34 +141,6 @@ public class ExpandableLayout extends LinearLayout {
         }
     }
 
-    public void filterParent(@NonNull Operation op) {
-        for (Section section : getSections()) {
-            final Object parent = section.parent;
-            final boolean contains = op.apply(parent);
-            getChildAt(sections.indexOf(section)).setVisibility(contains ? View.VISIBLE : View.GONE);
-        }
-    }
-
-
-    public void filterChildren(@NonNull Operation op) {
-        currentFilter = op;
-        for (Section section : getSections()) {
-            final List children = section.children;
-            boolean keepParentVisible = false;
-            final ViewGroup childrenViews = (ViewGroup) getChildAt(sections.indexOf(section));
-            for (int i = 0; i < children.size(); i++) {
-                final Object child = children.get(i);
-                final boolean contains = op.apply(child);
-                childrenViews.getChildAt(children.indexOf(child) + 1).setVisibility(contains ? View.VISIBLE : View.GONE);
-                if (!keepParentVisible && contains) {
-                    keepParentVisible = true;
-                }
-
-            }
-            childrenViews.setVisibility(keepParentVisible ? View.VISIBLE : View.GONE);
-        }
-    }
-
     private <C> void notifyItemAdded(int parentIndex, C child) {
         if (renderer == null) {
             return;
@@ -203,8 +163,7 @@ public class ExpandableLayout extends LinearLayout {
         }
     }
 
-    private void notifySectionAdded(final Section section)
-    {
+    private void notifySectionAdded(final Section section) {
         if (renderer == null)
             return;
 
@@ -263,20 +222,13 @@ public class ExpandableLayout extends LinearLayout {
         }
     }
 
-    private <P> void expand(@NonNull P parent)
-    {
-        for (int i = 0; i < sections.size(); i++)
-        {
-            if (parent.equals(sections.get(i).parent))
-            {
+    private <P> void expand(@NonNull P parent) {
+        for (int i = 0; i < sections.size(); i++) {
+            if (parent.equals(sections.get(i).parent)) {
                 ViewGroup sectionView = ((ViewGroup) getChildAt(i));
-                for (int j = 1; j < sectionView.getChildCount(); j++)
-                {
-                    final View childView = sectionView.getChildAt(j);
-                    final Object childType = sections.get(i).children.get(j - 1);
-                    childView.setVisibility(currentFilter.apply(childType) ? View.VISIBLE : View.GONE);
-                }
+                sectionView.removeViews(1, sectionView.getChildCount() - 1);
                 sections.get(i).expanded = true;
+                notifyItemAdded(i, sections.get(i).children);
                 if (expandListener != null)
                     expandListener.onExpanded(i, sections.get(i).parent, sectionView.getChildAt(0));
                 break;
@@ -289,11 +241,7 @@ public class ExpandableLayout extends LinearLayout {
             if (parent.equals(sections.get(i).parent)) {
                 ViewGroup sectionView = ((ViewGroup) getChildAt(i));
                 sections.get(i).expanded = false;
-
-                for (int j = 1; j < sectionView.getChildCount(); j++) {
-                    sectionView.getChildAt(j).setVisibility(View.GONE);
-                }
-
+                sectionView.removeViews(1, sectionView.getChildCount() - 1);
                 if (collapseListener != null)
                     collapseListener.onCollapsed(i, sections.get(i).parent, sectionView.getChildAt(0));
                 break;

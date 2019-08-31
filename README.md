@@ -13,7 +13,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.iammert:ExpandableLayout:1.4.1'
+    implementation 'com.github.PuffoCyano:ExpandableLayout:v2.1'
 }
 ```
 ## Layout
@@ -74,22 +74,7 @@ expandableLayout.addSection(section);
 expandableLayout.addChild(fruitCategory, new Fruit("Grape"));
 ```
 
-## Filter parent and children
-
-```java
-//make your parent class filterable
-class FruitCatefory implements Filterable{}
-
-//make your child class filterable
-class FruitCatefory implements Filterable{}
-```
 ## Methods
-Now, you can search in parents or children. Layout will be updated automatically. 
-```java
-expendableLayout.filterParent("SEARCH PARAM")
-//or
-expendableLayout.filterChildren("SEARCH PARAM")
-```
 With the new version 2.0 you can allow expanding only one section at a time:
 ```java
 // I want only one section expanded
